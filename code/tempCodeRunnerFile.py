@@ -1,0 +1,1 @@
+from pytmx.util_pygame import load_pygame
