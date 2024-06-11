@@ -28,7 +28,13 @@ class Game:
             'window':import_folder('..','graphics','level','window'),
             'big_chain':import_folder('..','graphics','level','big_chains'),
             'small_chain':import_folder('..','graphics','level','small_chains'),
-            'player' : import_sub_folders('..','graphics','player')
+            'player' : import_sub_folders('..','graphics','player'),
+            'saw' : import_folder('..','graphics','enemies','saw','animation'),
+            'saw_chain' : import_image('..','graphics','enemies','saw','saw_chain'),
+            'helicopter' : import_folder('..','graphics','level','helicopter'),
+            'boat' : import_folder('..','graphics','objects','boat'),
+            'spike' : import_image('..','graphics','enemies','spike_ball','Spiked Ball'),
+            'spike_chain' : import_image('..','graphics','enemies','spike_ball','spiked_chain')
         }
 
     def run(self):

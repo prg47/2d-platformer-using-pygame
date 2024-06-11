@@ -1,8 +1,9 @@
 from settings import*
-from sprites import Sprite, MovingSprite , AnimatedSprites
+from sprites import Sprite, MovingSprite , AnimatedSprites, Spike
 from player import Player
 from groups import AllSprites
 from random import uniform
+
 
 
 class Level:
@@ -73,7 +74,31 @@ class Level:
  
         #moving objects
         for obj in tmx_map.get_layer_by_name('Moving Objects'):
-            if obj.name == 'helicopter':
+            if obj.name == "spike":
+                Spike(
+                    pos = (obj.x + obj.width/2,obj.y + obj.height/2),
+                    surf =level_frames['spike'],
+                    radius = obj.properties['radius'],
+                    speed = obj.properties['speed'],
+                    start_angle = obj.properties['start_angle'],
+                    end_angle = obj.properties['end_angle'],
+                    groups = (self.all_sprites,self.damage_sprites)
+                )
+                for i in range(0,obj.properties['radius'],20):
+                      Spike(
+                    pos = (obj.x + obj.width/2,obj.y + obj.height/2),
+                    surf =level_frames['spike_chain'],
+                    radius = i,
+                    speed = obj.properties['speed'],
+                    start_angle = obj.properties['start_angle'],
+                    end_angle = obj.properties['end_angle'],
+                    groups = self.all_sprites,
+                    z = Z_LAYERS['bg details']
+                )
+                    
+            else:
+                frames = level_frames[obj.name]
+                groups = (self.all_sprites,self.sem_collision_sprites) if obj.properties['platform'] else (self.all_sprites,self.damage_sprites)
                 if obj.width>obj.height:#horizontal
                     move_dir = 'x'
                     start_pos = (obj.x,obj.y+obj.height/2)
@@ -84,7 +109,19 @@ class Level:
                     end_pos = (obj.x+ obj.width/2,obj.y + obj.height)
 
                 speed = obj.properties['speed']
-                MovingSprite((self.all_sprites,self.sem_collision_sprites),start_pos,end_pos,move_dir,speed)
+                MovingSprite(frames,groups,start_pos,end_pos,move_dir,speed,obj.properties['flip'])
+
+                if obj.name == 'saw':
+                    if move_dir == 'x':
+                        y = start_pos[1]-level_frames['saw_chain'].get_height()/2
+                        left,right = int(start_pos[0]),int(end_pos[0])
+                        for x in range(left,right,20):
+                            Sprite((x,y),level_frames['saw_chain'],self.all_sprites,  Z_LAYERS['bg details'])
+                    else:
+                        x = start_pos[0]-level_frames['saw_chain'].get_width()/2
+                        top,bottom = int(start_pos[1]),int(end_pos[1])
+                        for y in range(top,bottom,20):
+                            Sprite((x,y),level_frames['saw_chain'],self.all_sprites,  Z_LAYERS['bg details'])
 
 
 
