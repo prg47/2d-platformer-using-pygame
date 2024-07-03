@@ -1,5 +1,6 @@
 from settings import*
 from math import sin, cos, radians
+from random import randint
 
 class Sprite(pygame.sprite.Sprite):
     def __init__(self,pos,surf=pygame.Surface((TILE_SIZE,TILE_SIZE)),groups=None, z = Z_LAYERS['main']):
@@ -23,7 +24,37 @@ class AnimatedSprites(Sprite):
 	def update(self, dt):
 		self.animate(dt)
 
+class Item(AnimatedSprites):
+    def __init__(self, item_type, pos, frames,groups,data):
+        super().__init__(pos,frames,groups)
+        self.rect.center = pos
+        self.item_type = item_type
+        self.data = data 
 
+    def activate(self):
+        if self.item_type == 'gold':
+            self.data.coins += 5
+        if self.item_type == 'silver':
+            self.data.coins += 1
+        if self.item_type == 'diamond':
+            self.data.coins += 20
+        if self.item_type == 'skull':
+            self.data.coins += 5
+        if self.item_type == 'potion':
+            self.data.health += 1
+
+class ParticleEffectSprite(AnimatedSprites):
+    def __init__(self, pos, frames, groups):
+        super().__init__(pos, frames, groups)
+        self.rect.center = pos
+        self.z = Z_LAYERS['fg']
+
+    def animate(self,dt):
+        self.frame_index += self.animation_speed * dt
+        if self.frame_index < len(self.frames):
+            self.image = self.frames[int(self.frame_index)]
+        else:
+            self.kill()
 
 class MovingSprite(AnimatedSprites):
     def __init__(self,frames,groups,start_pos,end_pos,move_dir,speed,flip=False):
@@ -104,4 +135,15 @@ class Spike(Sprite):
         y = self.center[0] + self.radius*sin(radians(self.angle))
         self.rect.center = (x,y)
 
+class Cloud(Sprite):
+    def __init__(self,pos,surf,groups,z=Z_LAYERS['clouds']):
+        super().__init__(pos,surf,groups,z)
+        self.speed = randint(50,120)
+        self.direction = -1
+        self.rect.midbottom = pos
+
+    def update(self, dt):
+        self.rect.x += self.direction*self.speed*dt
+        if self.rect.right<=0:
+            self.kill()
 

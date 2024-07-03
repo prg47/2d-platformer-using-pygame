@@ -1,12 +1,14 @@
 from settings import *
 from os.path import join
 from timer import Timer 
+from math import sin
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self,pos,groups,collision_sprites,sem_collision_sprites,frames):
+    def __init__(self,pos,groups,collision_sprites,sem_collision_sprites,frames,data):
         #general setup
         super().__init__(groups)
         self.z = Z_LAYERS['main']
+        self.data = data
 
         #image
         self.frames,self.frame_index = frames,0
@@ -176,6 +178,18 @@ class Player(pygame.sprite.Sprite):
         for timer in self.timers.values():
             timer.update()
 
+    def get_damage(self):
+        if not self.timers['hit'].active :
+            self.data.health -= 1
+            self.timers['hit'].activate()
+
+    def flicker(self):
+        if self.timers['hit'].active and sin(pygame.time.get_ticks() * 100) >= 0:
+            white_mask = pygame.mask.from_surface(self.image)
+            white_surf = white_mask.to_surface()
+            white_surf.set_colorkey('black')
+            self.image = white_surf
+
     def update(self,dt):
         self.old_rect = self.hitbox_rect.copy()
         self.update_timers()
@@ -186,4 +200,6 @@ class Player(pygame.sprite.Sprite):
         
         self.get_state()
         self.animate(dt)
+        self.flicker()
+        
 

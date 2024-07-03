@@ -152,7 +152,7 @@
     <property name="speed" type="int" value="100"/>
    </properties>
   </object>
-  <object id="73" name="spike" gid="227" x="384" y="256" width="54" height="54">
+  <object id="73" name="spike" gid="227" x="351.63" y="502.377" width="54" height="54">
    <properties>
     <property name="end_angle" type="int" value="180"/>
     <property name="platform" type="bool" value="false"/>
@@ -161,7 +161,7 @@
     <property name="start_angle" type="int" value="0"/>
    </properties>
   </object>
-  <object id="74" name="helicopter" x="375" y="102" width="10" height="320">
+  <object id="74" name="helicopter" x="345.63" y="65.287" width="10" height="320">
    <properties>
     <property name="flip" type="bool" value="false"/>
     <property name="platform" type="bool" value="true"/>
@@ -203,7 +203,7 @@
  <objectgroup id="2" name="Water" visible="0">
   <object id="2" name="water" x="0" y="640" width="2560" height="320"/>
  </objectgroup>
- <objectgroup id="8" name="Data" visible="0">
+ <objectgroup id="8" name="Data">
   <object id="28" name="Data" x="0" y="0" width="64" height="64">
    <properties>
     <property name="bg" value=""/>
