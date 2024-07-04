@@ -4,7 +4,7 @@ from timer import Timer
 from math import sin
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self,pos,groups,collision_sprites,sem_collision_sprites,frames,data):
+    def __init__(self,pos,groups,collision_sprites,sem_collision_sprites,frames,data,attack_sound,jump_sound):
         #general setup
         super().__init__(groups)
         self.z = Z_LAYERS['main']
@@ -41,6 +41,9 @@ class Player(pygame.sprite.Sprite):
 			'hit': Timer(400)
 		}
 
+        self.attack_sound = attack_sound
+        self.jump_sound = jump_sound
+
     def input(self):
         keys = pygame.key.get_pressed()
         input_vector = vector(0,0)
@@ -65,6 +68,7 @@ class Player(pygame.sprite.Sprite):
     def attack(self):
         self.attacking = True
         self.frame_index = 0
+        self.attack_sound.play()
 
     def move(self,dt):
 
@@ -85,6 +89,7 @@ class Player(pygame.sprite.Sprite):
             if self.on_surface['floor']:
                 self.direction.y = -self.jump_height 
                 self.hitbox_rect.bottom -= 1
+                self.jump_sound.play()
             elif any((self.on_surface['left'],self.on_surface['right'])):
                 self.direction.y = -self.jump_height
                 self.direction = 1 if self.on_surface['left'] else -1
